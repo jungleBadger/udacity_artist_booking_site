@@ -52,6 +52,9 @@ class Artist(db.Model):
     genres = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
+    website = db.Column(db.String(120))
+    seeking_talent = db.Column(db.String(120))
+    seeking_description = db.Column(db.String(500))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -63,8 +66,10 @@ class Artist(db.Model):
 
 def format_datetime(value, format='medium'):
   date = dateutil.parser.parse(value)
+  print(date)
+#  format = "EEEE MMMM, d, y 'at' h:mma"
   if format == 'full':
-      format="EEEE MMMM, d, y 'at' h:mma"
+      format="MM, d, y 'at' h:m"
   elif format == 'medium':
       format="EE MM, dd, y h:mma"
   return babel.dates.format_datetime(date, format)
@@ -345,6 +350,7 @@ def show_artist(artist_id):
     "past_shows_count": 0,
     "upcoming_shows_count": 3,
   }
+  print(artist_id)
   data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
   return render_template('pages/show_artist.html', artist=data)
 
