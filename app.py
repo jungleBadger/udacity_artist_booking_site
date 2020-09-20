@@ -451,8 +451,24 @@ def create_shows():
 
 @app.route('/shows/create', methods=['POST'])
 def create_show_submission():
-    flash('Show was successfully listed!')
-    return render_template('pages/home.html')
+    try:
+        form = ShowForm(request.form)
+
+        show = Show(
+            artist_id=form.artist_id.data,
+            venue_id=form.venue_id.data,
+            start_time=form.start_time.data
+        )
+        db.session.add(show)
+        db.session.commit()
+        flash('Show: {0} created successfully'.format(show.id))
+    except Exception as err:
+        flash('An error occurred creating the Show: {0}. Error: {1}'.format(show.id, 'Invalid information'))
+        db.session.rollback()
+    finally:
+        db.session.close()
+
+    return render_template('pages/home.html'), 201
 
 
 @app.errorhandler(404)
